@@ -4,7 +4,10 @@ import android.content.Context
 import android.graphics.Point
 import android.view.View
 import android.view.WindowManager
+import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
+import com.ecommerce.testapp.R
 
 import com.ecommerce.testapp.R.*
 import com.ecommerce.testapp.totalItemsToBeDisplayed
@@ -14,6 +17,8 @@ import com.mikepenz.fastadapter.items.AbstractItem
 open class SimpleItem : AbstractItem<SimpleItem.ViewHolder>() {
     var name: String? = null
     var price: String? = null
+    var sampleImage: String? = null
+    var imageString: String? = null
 
     /** defines the type defining this item. must be unique. preferably an id */
 
@@ -39,15 +44,24 @@ open class SimpleItem : AbstractItem<SimpleItem.ViewHolder>() {
     class ViewHolder(view: View) : FastAdapter.ViewHolder<SimpleItem>(view) {
         var name: TextView = view.findViewById(id.product_name)
         var price: TextView = view.findViewById(id.product_price)
+        var imageView:ImageView = view.findViewById(id.product_image)
 
         override fun bindView(item: SimpleItem, payloads: List<Any>) {
             name.text = item.name
-            price.text = item.name
+            price.text = item.price
+            item.imageString?.let {
+                Glide.with(itemView.context)
+                    .load(it)
+                    //.placeholder(R.drawable.police)
+                    //.error(R.drawable.police)
+                    .into(imageView);
+            }
         }
 
         override fun unbindView(item: SimpleItem) {
             name.text = null
             price.text = null
+
         }
     }
 }

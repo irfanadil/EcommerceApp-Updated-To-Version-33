@@ -7,9 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 
 
 const val totalItemsToBeDisplayed = 5
@@ -17,7 +19,7 @@ const val leftRightPadding = totalItemsToBeDisplayed * 6
 
 
 class ItemListAdapter internal constructor(
-    private var itemList: List<ItemList>,
+    private var product: List<Product>,
     private var horizontalBox: Boolean,
     onProductListener: OnProductListener
 ) :  RecyclerView.Adapter<ItemListAdapter.BaseViewHolder>(){
@@ -25,7 +27,7 @@ class ItemListAdapter internal constructor(
 
     private val mOnProductListener: OnProductListener = onProductListener
     abstract class BaseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) { abstract fun bind(
-        item: ItemList
+        item: Product
     ) }
 
     inner class ProductViewHolder(itemView: View, globalOnProductListener: OnProductListener) : BaseViewHolder(
@@ -36,6 +38,7 @@ class ItemListAdapter internal constructor(
         private val productDesc:TextView = itemView.findViewById(R.id.product_detail)
         private val productPrice:TextView = itemView.findViewById(R.id.product_price)
         private val productRating:RatingBar= itemView.findViewById(R.id.rating)
+        val productImageView:ImageView = itemView.findViewById(R.id.product_image)
         private var onProductListener: OnProductListener
 
         init {
@@ -48,13 +51,21 @@ class ItemListAdapter internal constructor(
             mOnProductListener.onProductClick(adapterPosition)
         }
 
-        override fun bind(item: ItemList) {
-            productName.text = item.name
-            productDesc.text = item.description
+        override fun bind(item: Product) {
+            productName.text = item.title
+            productDesc.text = item.category
             productPrice.text = item.price.toString()
-            if(item.itemRate!=null && item.itemRate>0)
-                productRating.numStars = item.itemRate
-            //holder.productImage.loadImage("https://via.placeholder.com/150" )
+            //if(item.description!=null && item.description>0)
+               // productRating.numStars = item.description
+            item.image?.let {
+                Glide.with(itemView.context)
+                .load(it)
+                .placeholder(R.drawable.police)
+                .error(R.drawable.police)
+                .into(productImageView);
+            }
+
+            //productImageView.loadImage("https://via.placeholder.com/150" )
         }
     }
 
@@ -62,7 +73,7 @@ class ItemListAdapter internal constructor(
         itemView: View,
         globalOnProductListener: OnProductListener
     ) : BaseViewHolder(itemView), View.OnClickListener {
-        //val productImage:ImageView = itemView.product_image
+        private val productImageView:ImageView = itemView.findViewById(R.id.product_image)
         private val productName : TextView= itemView.findViewById(R.id.product_name)
         private val productPrice:TextView = itemView.findViewById(R.id.product_price)
         private var onProductListener: OnProductListener
@@ -70,10 +81,16 @@ class ItemListAdapter internal constructor(
             itemView.setOnClickListener(this)
             this.onProductListener = globalOnProductListener
         }
-        override fun bind(item: ItemList) {
-            productName.text = item.name
+        override fun bind(item: Product) {
+            productName.text = item.title
              productPrice.text = item.price.toString()
-             //productImage.loadImage("https://via.placeholder.com/150" )
+            item.image?.let {
+                Glide.with(itemView.context)
+                    .load(it)
+                    .placeholder(R.drawable.police)
+                    .error(R.drawable.police)
+                    .into(productImageView);
+            }
         }
         override fun onClick(v: View?) { mOnProductListener.onProductClick(adapterPosition) }
     }
@@ -129,15 +146,15 @@ class ItemListAdapter internal constructor(
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int)          {
-        holder.bind(itemList[position])
+        holder.bind(product[position])
     }
 
-    internal fun setAllItems(itemList: List<ItemList>) {
-        this.itemList = itemList
+    internal fun setAllItems(product: List<Product>) {
+        this.product = product
         notifyDataSetChanged()
     }
 
-    override fun getItemCount() = itemList.size
+    override fun getItemCount() = product.size
 
     interface OnProductListener {
         fun onProductClick(position: Int)

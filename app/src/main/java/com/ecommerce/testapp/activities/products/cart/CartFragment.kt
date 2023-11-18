@@ -41,7 +41,7 @@ class CartFragment : Fragment() , CartItemListAdapter.OnCartItemClickListener {
         }
 
         productViewModel.cartItems.observe(viewLifecycleOwner, Observer<List<CartItem>> {
-            var total:Int = 0
+            var total:Double = 0.0
             for (item in it)
                 total += item.cartItemPrice
             loader.visibility = View.GONE

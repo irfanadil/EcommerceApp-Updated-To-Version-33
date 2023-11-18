@@ -1,43 +1,43 @@
 package com.golfercard.playsafe
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ecommerce.testapp.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ItemListingFragmentViewModel  @Inject constructor(private val itemListingRepository: ItemListingRepository) : ViewModel() {
+class ItemListingFragmentViewModel  @Inject constructor(private val productsRepo: ProductListingRepo) : ViewModel() {
 
-    private val _itemListResult = MutableLiveData<ItemListResult>()
+    //private val _getProductsResponse = MutableLiveData<AllProductResponse>()
 
-    val itemListResult: LiveData<ItemListResult> = _itemListResult
+    //val getAllProducts: LiveData<AllProductResponse> = _getProductsResponse
 
     fun refresh() = fetchAllItems()
 
+
+    private val _allProductState: MutableStateFlow<ProductsApiState>
+            = MutableStateFlow(ProductsApiState.Empty)
+
+    val allProductState: StateFlow<ProductsApiState> = _allProductState
+
+
     private fun fetchAllItems() {
         viewModelScope.launch {
-            try {
-
-                //delay(4000) // for testing purpose...
-
-
-                val result = itemListingRepository.fetchAllItems()
-                Log.e("result - ", result.toString())
-                if (result is Result.Success)
-                    _itemListResult.value = result.data
-                else
-                    _itemListResult.value = ItemListResult()
-                //updateUi()
-            } catch (e: Exception) {
-                _itemListResult.value = ItemListResult()
-                Log.e("error ", "" + e.printStackTrace())
-            }
+            _allProductState.value = ProductsApiState.Loading
+            productsRepo.getAllProducts()
+                .catch { e ->
+                    _allProductState.value = ProductsApiState.Failure(e)
+                }.collect { data ->
+                    _allProductState.value = ProductsApiState.Success(data)
+                }
         }
+
     }
 
 }
+

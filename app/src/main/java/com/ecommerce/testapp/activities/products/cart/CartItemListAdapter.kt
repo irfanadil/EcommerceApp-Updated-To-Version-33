@@ -53,7 +53,7 @@ class CartItemListAdapter internal constructor(private var cartItemList: List<Ca
         val item = cartItemList[position]
         holder.productName.text = item.cartItemName
         holder.productQuantity.text = item.cartItemQuantity.toString()
-        holder.productSize.text = item.cartItemSize
+        //holder.productSize.text = item.cartItemSize
         holder.productPrice.text = item.cartItemPrice.toString()
         //if(item.cartItemRate!=null && item.cartItemRate>0)
             //holder.productRating.numStars = item.cartItemRate

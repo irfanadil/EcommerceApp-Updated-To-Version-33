@@ -26,7 +26,7 @@ interface CartItemsDao {
     suspend fun insert(cartItem: CartItem)
 
     @Query("UPDATE cartTable SET cartItemQuantity=:quantity , cartItemPrice=:price WHERE autoId=:id")
-    suspend fun update(quantity:Int, price:Int,  id:Int)
+    suspend fun update(quantity:Int, price:Double,  id:Int)
 
 
     //@WorkerThread

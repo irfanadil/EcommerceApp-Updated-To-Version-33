@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.ProgressBar
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +21,7 @@ import com.golfercard.playsafe.ItemListingFragmentViewModel
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.listeners.ClickEventHook
+import kotlinx.coroutines.launch
 
 
 class ItemListingFragment : Fragment() , ItemListAdapter.OnProductListener {
@@ -28,7 +31,7 @@ class ItemListingFragment : Fragment() , ItemListAdapter.OnProductListener {
     private lateinit var adapter:ItemListAdapter
     //private lateinit var horizontalAdapter:ItemListAdapter
     private lateinit var recyclerView: RecyclerView
-    private  var  itemList: List<ItemList> = listOf()
+    private  var  product: List<Product> = listOf()
 
     private lateinit var horizontalRecyclerView: RecyclerView
     private lateinit var root:View
@@ -41,7 +44,7 @@ class ItemListingFragment : Fragment() , ItemListAdapter.OnProductListener {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         setHasOptionsMenu(true)
         root = inflater.inflate(R.layout.fragment_item_listing, container, false)
         loader = root.findViewById<ProgressBar>(R.id.items_loader)
@@ -65,22 +68,41 @@ class ItemListingFragment : Fragment() , ItemListAdapter.OnProductListener {
 
 
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED){
+                itemListingFragmentViewModel.allProductState.collect { it ->
+                    when (it) {
+                        is ProductsApiState.Loading -> {
+                            loader.visibility = View.VISIBLE
+                        }
 
-        itemListingFragmentViewModel.itemListResult.observe(requireActivity(), Observer {
-            loader.visibility = View.GONE
-            if (it.itemList != null && it.itemList.isNotEmpty()) {
-                itemList = it.itemList
-                adapter.setAllItems(itemList)
-                //horizontalAdapter.setAllItems(itemList)
-                adapter.notifyDataSetChanged()
-                //horizontalAdapter.notifyDataSetChanged()
+                        is ProductsApiState.Failure -> {
+                            loader.visibility = View.GONE
+                            Toast.makeText(requireContext(), "No products found...", Toast.LENGTH_LONG)
+                                .show()
+                            Log.d("main", "onCreate: ${it.msg}")
+                        }
+                        is ProductsApiState.Empty -> { }
 
-                //When data is loaded...
-                setUpHorizontalFastAdapter(itemList)
+                        is ProductsApiState.Success -> {
+                            loader.visibility = View.GONE
+                            if (it.data.isNotEmpty()) {
+                                product = it.data
+                                adapter.setAllItems(product)
+                                //horizontalAdapter.setAllItems(itemList)
+                                adapter.notifyDataSetChanged()
+                                //When data is loaded...
+                                setUpHorizontalFastAdapter(product)
 
-            } else
-                Toast.makeText(requireContext(), "No products found...", Toast.LENGTH_LONG).show()
-        })
+                            }
+                        }
+
+                        else -> {}
+                    }
+                }
+            }
+        }
+
 
 
 
@@ -88,15 +110,16 @@ class ItemListingFragment : Fragment() , ItemListAdapter.OnProductListener {
         return root
     }
 
-    private fun setUpHorizontalFastAdapter(localItemList:List<ItemList>)
+    private fun setUpHorizontalFastAdapter(localProduct:List<Product>)
     {
         val simpleItemsList: ArrayList<SimpleItem> = ArrayList()
 
-        for (eachItem in localItemList) {
-            Log.e("eachItem", eachItem.name +" "+eachItem.price)
+        for (eachItem in localProduct) {
+            Log.e("eachItem", eachItem.title +" "+eachItem.price)
             val simpleItem = SimpleItem()
-            simpleItem.name = eachItem.name
+            simpleItem.name = eachItem.title
             simpleItem.price = eachItem.price.toString()
+            simpleItem.imageString= eachItem.image
             simpleItemsList.add(simpleItem)
         }
         Log.e("simpleItemsList", simpleItemsList.size.toString())
@@ -140,14 +163,14 @@ class ItemListingFragment : Fragment() , ItemListAdapter.OnProductListener {
 
             override fun onClick(v: View, position: Int, fastAdapter: FastAdapter<SimpleItem>, item: SimpleItem) {
                 //react on the click event
-                productActivityViewModel.loadItem(itemList[position])
+                productActivityViewModel.loadItem(product[position])
                 findNavController().navigate(R.id.detail_fragment, null)
             }
         })
     }
 
     override fun onProductClick(position: Int) {
-            productActivityViewModel.loadItem(itemList[position])
+            productActivityViewModel.loadItem(product[position])
             findNavController().navigate(R.id.detail_fragment, null)
     }
 

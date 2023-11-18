@@ -70,13 +70,15 @@ constructor(
         user = null
     }
 
-    suspend fun fetchUserList(): Result<UserListResult> {
+    /*
+    suspend fun fetchUserList(): ApiResult<UserListResult> {
         return dataSource.fetchUserList()
     }
+    */
 
-    suspend fun login(username: String, password: String): Result<LoginResponse> {
+    suspend fun login(username: String, password: String): LoginApiResult {
         val result = dataSource.login(username, password)
-        if (result is Result.Success)
+        if (result is LoginApiResult.Success)
             setLoggedInUser(result.data)
         return result
     }

@@ -1,6 +1,5 @@
 package com.ecommerce.testapp
 
-import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,48 +13,30 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(private val loginRepository: LoginRepository) : ViewModel() {
+class LoginViewModel @Inject constructor(private val loginRepo: LoginRepository) : ViewModel() {
 
-    private val _loginResult = MutableLiveData<LoginApiResult>()
-    val loginApiResult: LiveData<LoginApiResult> = _loginResult
+    //private val _loginResult = MutableLiveData<LoginApiResult>()
+    //val loginApiResult: LiveData<LoginApiResult> = _loginResult
 
     private val loginEvent = Channel<LoginApiResult>()
-
     // Receiving channel as a flow
     val loginEventFlow = loginEvent.receiveAsFlow()
 
-    fun login(username: String, password: String) {
-        viewModelScope.launch {
-            var bool = false
-            val userListResult = loginRepository.fetchUserList()
-            if (userListResult is Result.Success) {
-                val userList = userListResult.data.userList
-                if (userList != null) {
-                    for (user in userList) {
-                        if (user.userName == username && user.password == password) {
-                            bool = true
-                            break
-                        }
-                    }
-                }
-            }
-            if (bool) {
-                val result = loginRepository.login(username, password)
-                Log.e("result - ", result.toString())
-                if (result is Result.Success)
-                    //_loginResult.value = LoginResponseResult(success = LoginResponse(token = result.data.token))
-                    loginEvent.send(LoginApiResult.Success(result.data))
-                else
-                    loginEvent.send(LoginApiResult.Error(result.toString()))
-                    //_loginResult.value = LoginResponseResult(error = R.string.login_failed)
-            }
-        }
-    }
+
 
     fun testLogin(username: String, password: String){
         viewModelScope.launch {
             delay(2000)
-            loginEvent.send(LoginApiResult.Success(LoginResponse("SuccessToken")))
+            viewModelScope.launch {
+                val response = loginRepo.login(username, password)
+                if(response is LoginApiResult.Success){
+                    loginEvent.send(LoginApiResult.Success(response.data))
+                }
+                else{
+                    loginEvent.send(LoginApiResult.Failure(message = "Login call failed..."))
+                }
+            }
+
         }
     }
 
@@ -72,5 +53,38 @@ class LoginViewModel @Inject constructor(private val loginRepository: LoginRepos
     private fun isPasswordValid(password: String): Boolean {
         return password.length > 5
     }
+
+
+    /*
+    fun login(username: String, password: String) {
+        viewModelScope.launch {
+            var bool = false
+            val userListResult = loginRepo.fetchUserList()
+            if (userListResult is ApiResult.Success) {
+                val userList = userListResult.data.userList
+                if (userList != null) {
+                    for (user in userList) {
+                        if (user.userName == username && user.password == password) {
+                            bool = true
+                            break
+                        }
+                    }
+                }
+            }
+            if (bool) {
+                val result = loginRepo.login(username, password)
+                Log.e("result - ", result.toString())
+                if (result is ApiResult.Success)
+                //_loginResult.value = LoginResponseResult(success = LoginResponse(token = result.data.token))
+                    loginEvent.send(ApiResult.Success(result.data))
+                else
+                    loginEvent.send(ApiResult.Error(result.toString()))
+                //_loginResult.value = LoginResponseResult(error = R.string.login_failed)
+            }
+        }
+    }
+
+     */
+
 
 }

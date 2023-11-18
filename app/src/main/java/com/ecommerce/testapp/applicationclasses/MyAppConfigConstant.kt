@@ -2,7 +2,7 @@ package com.ecommerce.testapp
 
 object MyAppConfigConstant {
         const val APP_PREFERENCES: String = "COMMERCE_PREFERENCES"
-        const val BASE_URL = "http://94.206.102.22/app/"
+        const val BASE_URL = "https://fakestoreapi.com/"
         const val  LOGIN_NAME:String = "test1"
         const val  PASSWORD:String = "123"
         const val TOKEN:String = "token"

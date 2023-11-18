@@ -1,8 +1,6 @@
 package com.ecommerce.testapp
 
-import android.app.Activity
 import android.content.Intent
-import androidx.lifecycle.Observer
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.view.View
@@ -37,24 +35,27 @@ class LoginActivity : AppCompatActivity() {
             lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 // do your work here
                 loginViewModel.loginEventFlow.collect(){
+
                     when(it){
-                        is LoginApiResult.Success->{
+                        is LoginApiResult.Success ->{
                             val intent = Intent(this@LoginActivity, ProductActivity::class.java)
                             startActivity(intent)
                             finish()
                         }
-                        is LoginApiResult.Error->{
-                            showLoginFailed(it.message)
+                        is LoginApiResult.Failure->{
+                            it.message?.let { it1 -> showLoginFailed(it1) }
                         }
                         else -> {}
                     }
+
+
                 }
             }
         }
 
         login.setOnClickListener {
             loading.visibility = View.VISIBLE
-            loginViewModel.testLogin(username.text.toString(), password.text.toString())
+            loginViewModel.testLogin("mor_2314", "83r5^_")
         }
     }
 

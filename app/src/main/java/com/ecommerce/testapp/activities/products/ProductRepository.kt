@@ -22,7 +22,7 @@ constructor(@ApplicationContext val application: Application, val loginRepositor
         val cartItemList = cartItemRepository.getAllCartItems()
         targetItem = null
         for (listItem in cartItemList) {
-            if (listItem.cartItemId == cartItem.cartItemId && listItem.cartItemSize == cartItem.cartItemSize) {
+            if (listItem.cartItemId == cartItem.cartItemId) {
                 targetItem = listItem
                 break
             }

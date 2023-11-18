@@ -16,16 +16,16 @@ import javax.inject.Inject
 class ProductViewModel @Inject constructor(application: Application, loginRepository: LoginRepository)
     : AndroidViewModel(application) {
 
-    private val _itemList: MutableLiveData<ItemList> =  MutableLiveData()
+    private val _product: MutableLiveData<Product> =  MutableLiveData()
 
     var logoutBool: MutableLiveData<Boolean> = MutableLiveData()
 
     private val productRepository = ProductRepository(application, loginRepository)
 
-    val itemList:LiveData<ItemList> = _itemList
+    val product:LiveData<Product> = _product
 
-    fun loadItem(itemList: ItemList) {
-        _itemList.value = itemList
+    fun loadItem(product: Product) {
+        _product.value = product
     }
 
     val cartItems: LiveData<List<CartItem>> = productRepository.getLiveCartItems()

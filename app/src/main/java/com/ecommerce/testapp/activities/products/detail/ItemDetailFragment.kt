@@ -15,12 +15,12 @@ class ItemDetailFragment : Fragment() {
     private lateinit var root:View
     private val productViewModel: ProductViewModel by activityViewModels()
     private var selectedSize:String = "M"
-    private lateinit var selectedItem:ItemList
+    private lateinit var selectedItem:Product
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         setHasOptionsMenu(true)
         root = inflater.inflate(R.layout.fragment_item_detail, container, false)
-        productViewModel.itemList.observe(viewLifecycleOwner, Observer<ItemList> { item ->
+        productViewModel.product.observe(viewLifecycleOwner, Observer<Product> { item ->
             selectedItem = item
             //product_name.text = item.name
         })
@@ -41,12 +41,11 @@ class ItemDetailFragment : Fragment() {
         root.findViewById<Button>(R.id.next_button).setOnClickListener {
             productViewModel.insertUpdateCartItem(
                 CartItem(
-                    selectedItem.id,
-                    selectedItem.name,
-                    selectedItem.description,
-                    selectedItem.price!!,
-                    selectedItem.itemRate,
-                    selectedSize
+                    cartItemId = selectedItem.id,
+                    cartItemName = selectedItem.title,
+                    cartItemCategory = selectedItem.category,
+                    cartItemPrice = selectedItem.price!!,
+                    cartItemDescription = selectedItem.description,
                 )
             )
             findNavController().navigate(R.id.add_to_cart, null)
