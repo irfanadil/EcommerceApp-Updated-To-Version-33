@@ -3,7 +3,6 @@ package com.ecommerce.testapp
 
 import android.content.SharedPreferences
 import android.util.Log
-import com.ecommerce.testapp.activities.products.listing.TestProducts
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import retrofit2.HttpException
@@ -46,7 +45,7 @@ class ProductsDataSource @Inject constructor(private val testAPI: TestAPI, priva
 
             val collectionType: Type = object : TypeToken<Collection<AllProductResponse>>() {}.type
             val gson = Gson()
-            val enums = Gson().fromJson<List<TestProducts>>(allProducts.toString())
+            val enums = Gson().fromJson<List<Product>>(allProducts.toString())
             Log.e("enums", enums.toString())
 
 

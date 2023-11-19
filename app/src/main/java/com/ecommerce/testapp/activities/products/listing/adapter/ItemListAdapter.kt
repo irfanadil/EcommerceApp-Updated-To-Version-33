@@ -34,7 +34,7 @@ class ItemListAdapter internal constructor(
         itemView
     ), View.OnClickListener {
         //val productImage:ImageView = itemView.product_image
-        private val productName : TextView= itemView.findViewById(R.id.product_name)
+        private val productName : TextView= itemView.findViewById(R.id.itemName)
         private val productDesc:TextView = itemView.findViewById(R.id.product_detail)
         private val productPrice:TextView = itemView.findViewById(R.id.product_price)
         private val productRating:RatingBar= itemView.findViewById(R.id.rating)
@@ -74,7 +74,7 @@ class ItemListAdapter internal constructor(
         globalOnProductListener: OnProductListener
     ) : BaseViewHolder(itemView), View.OnClickListener {
         private val productImageView:ImageView = itemView.findViewById(R.id.product_image)
-        private val productName : TextView= itemView.findViewById(R.id.product_name)
+        private val productName : TextView= itemView.findViewById(R.id.itemName)
         private val productPrice:TextView = itemView.findViewById(R.id.product_price)
         private var onProductListener: OnProductListener
         init {

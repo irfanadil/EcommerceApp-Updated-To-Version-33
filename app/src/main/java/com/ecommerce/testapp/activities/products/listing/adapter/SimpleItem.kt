@@ -7,7 +7,6 @@ import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
-import com.ecommerce.testapp.R
 
 import com.ecommerce.testapp.R.*
 import com.ecommerce.testapp.totalItemsToBeDisplayed
@@ -42,7 +41,7 @@ open class SimpleItem : AbstractItem<SimpleItem.ViewHolder>() {
     }
 
     class ViewHolder(view: View) : FastAdapter.ViewHolder<SimpleItem>(view) {
-        var name: TextView = view.findViewById(id.product_name)
+        var name: TextView = view.findViewById(id.itemName)
         var price: TextView = view.findViewById(id.product_price)
         var imageView:ImageView = view.findViewById(id.product_image)
 

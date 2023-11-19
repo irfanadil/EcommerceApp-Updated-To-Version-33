@@ -15,7 +15,7 @@ class CartItemRepository(private val cartItemsDao: CartItemsDao) {
         //return cartItemsDao.getCartItemById(id)
     //}
 
-    suspend fun deleteCartItemById(id:Int):Int?
+    suspend fun deleteCartItemById(id:Int): Int
     {
         return cartItemsDao.deleteCartItemById(id)
     }

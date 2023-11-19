@@ -3,8 +3,10 @@ package com.ecommerce.testapp
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 
 
 class CartItemListAdapter internal constructor(private var cartItemList: List<CartItem>, onCartItemClickListener: OnCartItemClickListener) :  RecyclerView.Adapter<CartItemListAdapter.CartItemViewHolder>(){
@@ -12,8 +14,7 @@ class CartItemListAdapter internal constructor(private var cartItemList: List<Ca
     private val mOnCartItemClickListener: OnCartItemClickListener = onCartItemClickListener
 
     inner class CartItemViewHolder(itemView: View, globalOnProductListener: OnCartItemClickListener) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
-        //val productImage:ImageView = itemView.product_image
-
+        val productImage:ImageView = itemView.findViewById(R.id.imageView2)
         val productQuantity : TextView= itemView.findViewById(R.id.item_quantity)
         val productSize : TextView= itemView.findViewById(R.id.item_size_field)
         val productName:TextView = itemView.findViewById(R.id.sizeName)
@@ -57,7 +58,14 @@ class CartItemListAdapter internal constructor(private var cartItemList: List<Ca
         holder.productPrice.text = item.cartItemPrice.toString()
         //if(item.cartItemRate!=null && item.cartItemRate>0)
             //holder.productRating.numStars = item.cartItemRate
-        //holder.productImage.loadImage("https://via.placeholder.com/150" )
+        holder.productImage.loadImage("https://via.placeholder.com/150" )
+        item.cartImage?.let {
+            Glide.with(holder.productImage.context)
+                .load(it)
+                .placeholder(R.drawable.police)
+                .error(R.drawable.police)
+                .into(holder.productImage)
+        }
     }
 
     internal fun setAllCartItems(cartItemList: List<CartItem>) {

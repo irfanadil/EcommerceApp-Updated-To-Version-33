@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ItemListingFragmentViewModel  @Inject constructor(private val productsRepo: ProductListingRepo) : ViewModel() {
+class ItemListingFragmentViewModel  @Inject constructor(private val productsRepo: ItemListingRepo) : ViewModel() {
 
     //private val _getProductsResponse = MutableLiveData<AllProductResponse>()
 

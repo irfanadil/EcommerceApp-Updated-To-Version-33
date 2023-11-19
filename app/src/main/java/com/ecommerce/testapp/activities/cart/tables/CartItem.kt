@@ -11,6 +11,7 @@ data class CartItem(
     val cartItemCategory:String?,
     val cartItemDescription:String?,
     var cartItemPrice:Double=0.0,
+    val cartImage:String?,
     //val cartItemRate:Int?,
     //val cartItemSize:String?,
     var cartItemQuantity:Int=1,

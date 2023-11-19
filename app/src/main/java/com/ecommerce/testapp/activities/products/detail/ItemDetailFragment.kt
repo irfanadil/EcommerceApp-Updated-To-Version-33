@@ -5,10 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 
 
 class ItemDetailFragment : Fragment() {
@@ -20,10 +23,22 @@ class ItemDetailFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         setHasOptionsMenu(true)
         root = inflater.inflate(R.layout.fragment_item_detail, container, false)
-        productViewModel.product.observe(viewLifecycleOwner, Observer<Product> { item ->
+        val cartImageView = root.findViewById<ImageView>(R.id.cartImage)
+        val itemName = root.findViewById<TextView>(R.id.itemName)
+        productViewModel.product.observe(viewLifecycleOwner) { item ->
             selectedItem = item
+            item.title?.let {
+                itemName.text = it
+            }
+            item.image?.let {
+                Glide.with(root.context)
+                    .load(it)
+                    .placeholder(R.drawable.police)
+                    .error(R.drawable.police)
+                    .into(cartImageView);
+            }
             //product_name.text = item.name
-        })
+        }
 
         root.findViewById<Button>(R.id.materialButton).setOnClickListener {
             //selectedSize = materialButton.text.toString()
@@ -43,6 +58,7 @@ class ItemDetailFragment : Fragment() {
                 CartItem(
                     cartItemId = selectedItem.id,
                     cartItemName = selectedItem.title,
+                    cartImage = selectedItem.image,
                     cartItemCategory = selectedItem.category,
                     cartItemPrice = selectedItem.price!!,
                     cartItemDescription = selectedItem.description,

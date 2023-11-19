@@ -77,7 +77,7 @@ constructor(
     */
 
     suspend fun login(username: String, password: String): LoginApiResult {
-        val result = dataSource.login(username, password)
+        val result = dataSource.loginByResponseBody(username, password)
         if (result is LoginApiResult.Success)
             setLoggedInUser(result.data)
         return result

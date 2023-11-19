@@ -1,7 +1,6 @@
 package com.ecommerce.testapp
 
 import android.util.Log
-import com.ecommerce.testapp.activities.products.listing.TestProducts
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.IOException
@@ -11,17 +10,7 @@ class LoginDataSource @Inject constructor(private val testAPI: TestAPI){
 
     suspend fun login(username: String, password: String): LoginApiResult {
         return try {
-            val loginResponseBody = testAPI.login(LoginRequest(username, password))
-
-            //val collectionType = object : TypeToken<LoginApiResult>() {}.type
-            //val result1 = Gson().fromJson<LoginApiResult>(loginResponseBody.toString(), collectionType)
-
-
-
-
-            Log.e("TAF" , loginResponseBody.toString())
-
-            LoginApiResult.Success(loginResponseBody)
+            LoginApiResult.Success(testAPI.login(LoginRequest(username, password)))
         } catch (e: Throwable) {
             LoginApiResult.Failure(
                 FailureStatus.API_FAIL,
@@ -30,14 +19,28 @@ class LoginDataSource @Inject constructor(private val testAPI: TestAPI){
         }
     }
 
-    /*
-    suspend fun fetchUserList(): ApiResult<UserListResult> {
+    suspend fun loginByResponseBody(username: String, password: String): LoginApiResult {
         return try {
-             ApiResult.Success(testAPI.fetchUserList())
+            val loginResponseBody = testAPI.loginResponseBody(LoginRequest(username, password))
+            // this value can be consumed only once, if you call loginResponseBody.string() again, it will return blank
+            // https://stackoverflow.com/questions/28300359/cant-get-okhttps-response-body-tostring-to-return-a-string
+
+            var content = loginResponseBody.string()
+            Log.e("responseTypeCasted " ,content) // will work fine...
+
+            //content = loginResponseBody.string()
+            //Log.e("responseTypeCasted2= " ,content) // will be empty string...
+
+            val token: TypeToken<LoginResponse> = object : TypeToken<LoginResponse>() {}
+            val loginResponseTypeCasted :LoginResponse  = Gson().fromJson(content, token.type)
+            Log.e("responseTypeCasted " , loginResponseTypeCasted.toString())
+            LoginApiResult.Success(loginResponseTypeCasted)
         } catch (e: Throwable) {
-            ApiResult.Error(IOException("Error logging in", e))
+            LoginApiResult.Failure(
+                FailureStatus.API_FAIL,
+                message = "Api fail exception" , exception = IOException("Error logging in", e)
+            )
         }
     }
-    */
 
 }

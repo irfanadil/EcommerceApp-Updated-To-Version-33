@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-class ProductListingRepo @Inject constructor(private val dataSource: ProductsDataSource)
+class ItemListingRepo @Inject constructor(private val dataSource: ProductsDataSource)
     {
     // Token can be sent from here in the function parameter but I will grab that in DataSource....
     //suspend fun getAllProducts(): ApiResult<AllProductResponse> = dataSource.getAllProducts()

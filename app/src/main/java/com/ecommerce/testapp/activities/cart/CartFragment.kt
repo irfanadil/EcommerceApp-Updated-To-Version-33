@@ -45,7 +45,7 @@ class CartFragment : Fragment() , CartItemListAdapter.OnCartItemClickListener {
             for (item in it)
                 total += item.cartItemPrice
             loader.visibility = View.GONE
-            cartItemList = if(it != null && it.isNotEmpty()) it else listOf()
+            cartItemList = it.ifEmpty { listOf() }
             adapter.setAllCartItems(cartItemList)
             adapter.notifyDataSetChanged()
             Toast.makeText(requireActivity(), "Total price $total", Toast.LENGTH_LONG ).show()
