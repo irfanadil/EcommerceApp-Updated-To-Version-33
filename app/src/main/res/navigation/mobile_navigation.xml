@@ -14,12 +14,34 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@+id/home_dest">
+    app:startDestination="@+id/login_dest">
 
 
 
     <fragment
-        android:id="@+id/home_dest"
+        android:id="@+id/login_dest"
+        android:name="com.ecommerce.testapp.LoginFragment"
+        android:label="@string/login"
+        tools:layout="@layout/fragment_login">
+
+        <!-- TODO STEP 7.1 - Add action with transitions -->
+        <!--<action-->
+        <!--android:id="@+id/next_action"-->
+        <!--app:destination="@+id/flow_step_one_dest"-->
+        <!--app:enterAnim="@anim/slide_in_right"-->
+        <!--app:exitAnim="@anim/slide_out_left"-->
+        <!--app:popEnterAnim="@anim/slide_in_left"-->
+        <!--app:popExitAnim="@anim/slide_out_right" />-->
+        <!-- TODO END STEP 7.1 -->
+
+        <action
+            android:id="@+id/action_login_to_home_fragment"
+            app:destination="@id/item_listing_fragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/item_listing_fragment"
         android:name="com.ecommerce.testapp.ItemListingFragment"
         android:label="@string/home"
         tools:layout="@layout/fragment_item_listing">
@@ -71,7 +93,7 @@
             android:defaultValue="2"/>
         <action
             android:id="@+id/action_add_to_cart_to_home_dest"
-            app:destination="@id/home_dest" />
+            app:destination="@id/item_listing_fragment" />
 
     </fragment>
 

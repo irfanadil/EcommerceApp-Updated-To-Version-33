@@ -9,14 +9,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.ecommerce.testapp.activities.screens.MainViewModel
 
 
 class ItemDetailFragment : Fragment() {
     private lateinit var root:View
-    private val productViewModel: ProductViewModel by activityViewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
     private var selectedSize:String = "M"
     private lateinit var selectedItem:Product
 
@@ -25,7 +25,7 @@ class ItemDetailFragment : Fragment() {
         root = inflater.inflate(R.layout.fragment_item_detail, container, false)
         val cartImageView = root.findViewById<ImageView>(R.id.cartImage)
         val itemName = root.findViewById<TextView>(R.id.itemName)
-        productViewModel.product.observe(viewLifecycleOwner) { item ->
+        mainViewModel.product.observe(viewLifecycleOwner) { item ->
             selectedItem = item
             item.title?.let {
                 itemName.text = it
@@ -54,7 +54,7 @@ class ItemDetailFragment : Fragment() {
         }
 
         root.findViewById<Button>(R.id.next_button).setOnClickListener {
-            productViewModel.insertUpdateCartItem(
+            mainViewModel.insertUpdateCartItem(
                 CartItem(
                     cartItemId = selectedItem.id,
                     cartItemName = selectedItem.title,

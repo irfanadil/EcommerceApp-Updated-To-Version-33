@@ -1,4 +1,4 @@
-package com.ecommerce.testapp
+package com.ecommerce.testapp.activities.screens
 
 
 import android.content.Intent
@@ -6,24 +6,29 @@ import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
-import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
+import com.ecommerce.testapp.LoginViewModel
+import com.ecommerce.testapp.R
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class ProductActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration : AppBarConfiguration
-
+    private lateinit var navController:NavController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.navigation_activity)
@@ -32,7 +37,7 @@ class ProductActivity : AppCompatActivity() {
             .findFragmentById(R.id.my_nav_host_fragment) as NavHostFragment? ?: return
 
         // Set up Action Bar
-        val navController = host.navController
+        navController = host.navController
 
         appBarConfiguration = AppBarConfiguration(navController.graph)
 
@@ -51,20 +56,23 @@ class ProductActivity : AppCompatActivity() {
         observeLogout()
     }
 
-    private val productViewModel: ProductViewModel by viewModels()
+    private val mainViewModel: MainViewModel by viewModels()
+
+    private val loginViewModel: LoginViewModel by viewModels()
 
     private fun observeLogout()
     {
-        productViewModel.logoutBool.observe(this@ProductActivity, Observer {
-            Log.e("Now observing- ", "observeLogout")
-            if(it) {
-                val intent = Intent(this@ProductActivity, LoginActivity::class.java)
-                startActivity(intent)
-                finish()
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                loginViewModel.logoutEvent.collect() {
+                    Log.e("Now observing- ", "observeLogout")
+                    if (it) {
+                        navController.navigate(R.id.login_dest, null)
+                    } else
+                        Toast.makeText(this@MainActivity, "User can not logout...", Toast.LENGTH_LONG).show()
+                }
             }
-            else
-                Toast.makeText(this@ProductActivity, "User can not logout...", Toast.LENGTH_LONG).show()
-        })
+        }
     }
 
 

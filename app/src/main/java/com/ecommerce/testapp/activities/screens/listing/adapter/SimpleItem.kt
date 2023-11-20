@@ -1,4 +1,4 @@
-package com.ecommerce.testapp.activities.products.listing.adapter
+package com.ecommerce.testapp.activities.screens.listing.adapter
 
 import android.content.Context
 import android.graphics.Point

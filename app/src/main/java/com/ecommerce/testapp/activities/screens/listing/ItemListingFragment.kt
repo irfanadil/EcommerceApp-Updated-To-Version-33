@@ -8,14 +8,14 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.ecommerce.testapp.activities.products.listing.adapter.SimpleItem
+import com.ecommerce.testapp.activities.screens.MainViewModel
+import com.ecommerce.testapp.activities.screens.listing.adapter.SimpleItem
 import com.github.rubensousa.gravitysnaphelper.GravitySnapHelper
 import com.golfercard.playsafe.ItemListingFragmentViewModel
 import com.mikepenz.fastadapter.FastAdapter
@@ -38,7 +38,7 @@ class ItemListingFragment : Fragment() , ItemListAdapter.OnProductListener {
 
     private lateinit var loader:ProgressBar
 
-    private val productActivityViewModel: ProductViewModel by activityViewModels()
+    private val productActivityViewModel: MainViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,

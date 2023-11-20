@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.ecommerce.testapp.activities.screens.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import javax.inject.Inject
@@ -30,7 +31,7 @@ class SplashActivity : AppCompatActivity() {
 
             } else { */
                 delay(300)
-                startActivity(Intent(this@SplashActivity, LoginActivity::class.java))
+                startActivity(Intent(this@SplashActivity, MainActivity::class.java))
                 finish()
             //}
         }

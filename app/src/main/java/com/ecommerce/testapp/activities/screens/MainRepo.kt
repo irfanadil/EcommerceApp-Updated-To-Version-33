@@ -1,16 +1,23 @@
-package com.ecommerce.testapp
+package com.ecommerce.testapp.activities.screens
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.LiveData
+import com.ecommerce.testapp.CartItem
+import com.ecommerce.testapp.CartItemRepository
+import com.ecommerce.testapp.ProductsDatabase
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class ProductRepository @Inject
-constructor(@ApplicationContext val application: Application, val loginRepository: LoginRepository) {
+class MainRepo @Inject
+constructor(@ApplicationContext val appContext: Context,
+            //val loginRepository: LoginRepository,
+            //private val dataSource: LoginDataSource, private val spEditor: SharedPreferences.Editor,
+) {
 
-    private val cartItemsDao = ProductsDatabase.getDatabase(application).cartItemsDao()
+    private val cartItemsDao = ProductsDatabase.getDatabase(appContext).cartItemsDao()
     private val cartItemRepository = CartItemRepository(cartItemsDao)
-    private var targetItem:CartItem? = null
+    private var targetItem: CartItem? = null
 
 
 
@@ -54,10 +61,9 @@ constructor(@ApplicationContext val application: Application, val loginRepositor
         cartItemRepository.updateCartItem(cartItem)
     }
 
-    suspend fun userLogout()
-    {
-        loginRepository.logout()
-    }
+
+
+
 
 
 }

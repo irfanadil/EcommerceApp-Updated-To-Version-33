@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
         android:id="@+id/action_fragment_layout"
-    tools:context=".ProductActivity">
+    tools:context=".activities.screens.MainActivity">
 
 
     <androidx.recyclerview.widget.RecyclerView

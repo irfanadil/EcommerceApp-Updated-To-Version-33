@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.ecommerce.testapp.activities.screens.MainViewModel
 
 class CartFragment : Fragment() , CartItemListAdapter.OnCartItemClickListener {
 
@@ -20,9 +21,10 @@ class CartFragment : Fragment() , CartItemListAdapter.OnCartItemClickListener {
     private lateinit var recyclerView: RecyclerView
     private  var  cartItemList: List<CartItem> = listOf()
     private lateinit var root:View
-    private lateinit var backToListing:Button
+    private lateinit var proceedOrder:Button
     private lateinit var loader: ProgressBar
-    private val productViewModel: ProductViewModel by activityViewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
+    private val loginViewModel: LoginViewModel by activityViewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         setHasOptionsMenu(true)
@@ -35,12 +37,12 @@ class CartFragment : Fragment() , CartItemListAdapter.OnCartItemClickListener {
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.itemAnimator = DefaultItemAnimator()
         recyclerView.adapter = adapter
-        backToListing = root.findViewById(R.id.back_to_listing)
-        backToListing.setOnClickListener {
-            productViewModel.logoutUser()
+        proceedOrder = root.findViewById(R.id.place_order)
+        proceedOrder.setOnClickListener {
+            loginViewModel.logoutUser()
         }
 
-        productViewModel.cartItems.observe(viewLifecycleOwner, Observer<List<CartItem>> {
+        mainViewModel.cartItems.observe(viewLifecycleOwner, Observer<List<CartItem>> {
             var total:Double = 0.0
             for (item in it)
                 total += item.cartItemPrice
@@ -52,6 +54,6 @@ class CartFragment : Fragment() , CartItemListAdapter.OnCartItemClickListener {
         })
         return root
     }
-    override fun onCartItemRemoved(position: Int) =  productViewModel.updateCartItem(cartItemList[position])
-    override fun onCartItemAdded(position: Int) = productViewModel.addCartItem(cartItemList[position])
+    override fun onCartItemRemoved(position: Int) =  mainViewModel.updateCartItem(cartItemList[position])
+    override fun onCartItemAdded(position: Int) = mainViewModel.addCartItem(cartItemList[position])
 }

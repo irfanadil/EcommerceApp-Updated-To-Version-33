@@ -10,6 +10,8 @@ import androidx.security.crypto.MasterKey
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
+import com.ecommerce.testapp.activities.screens.MainRepo
+import com.ecommerce.testapp.activities.screens.MainViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -115,19 +117,25 @@ object AppModule {
         @Provides
         @Singleton
 
-        fun provideLoginRepo( dataSource: LoginDataSource,  spEditor: SharedPreferences.Editor , @ApplicationContext applicationContext: Context): LoginRepository {
-            return LoginRepository( dataSource,  spEditor, applicationContext )
+        fun provideLoginRepo( dataSource: LoginDataSource,  spEditor: SharedPreferences.Editor , @ApplicationContext applicationContext: Context): LoginRepo {
+            return LoginRepo( dataSource,  spEditor, applicationContext )
         }
 
         @Provides
         @Singleton
-        fun provideLoginViewModel( loginRepository: LoginRepository): LoginViewModel {
-            return LoginViewModel( loginRepository )
+        fun provideLoginViewModel(loginRepo: LoginRepo): LoginViewModel {
+            return LoginViewModel( loginRepo )
         }
 
         @Provides
         @Singleton
-        fun provideProductRepo( @ApplicationContext applicationContext: Application , loginRepository: LoginRepository): ProductRepository {
-            return ProductRepository( applicationContext , loginRepository  )
+        fun provideMainRepo(@ApplicationContext applicationContext: Context): MainRepo {
+            return MainRepo( applicationContext   )
         }
+
+    @Provides
+    @Singleton
+    fun provideMainViewModel(@ApplicationContext applicationContext: Context, mainRepo: MainRepo): MainViewModel {
+        return MainViewModel( applicationContext , mainRepo )
+    }
 }
