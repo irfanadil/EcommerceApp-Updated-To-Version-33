@@ -13,9 +13,11 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
@@ -23,7 +25,7 @@ class LoginFragment : Fragment() {
     private val loginViewModel: LoginViewModel by activityViewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        setHasOptionsMenu(true)
+
         root = inflater.inflate(R.layout.fragment_login, container, false)
 
         val username = root.findViewById<EditText>(R.id.username)
@@ -38,7 +40,10 @@ class LoginFragment : Fragment() {
 
                     when(it){
                         is LoginApiResult.Success ->{
-                            findNavController().navigate(R.id.item_listing_fragment, null)
+                            //findNavController().popBackStack(R.id.login_dest, true);
+
+                            val navOptions: NavOptions = NavOptions.Builder().setPopUpTo(R.id.login_dest, true).build()
+                            findNavController().navigate(R.id.action_login_to_home_fragment, null, navOptions)
                         }
                         is LoginApiResult.Failure->{
                             it.message?.let { it1 -> showLoginFailed(it1) }

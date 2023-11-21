@@ -15,7 +15,7 @@ class TokenAuthenticator ( private val sharedPreferences: SharedPreferences) : A
             Log.e("authenticate - ", "Generating Token---")
             val newTokenResponse : LoginResponse = getNewToken() ?: return null
             if(newTokenResponse.token.isNotBlank() && newTokenResponse.token.isNotEmpty()) {
-                sharedPreferences.edit().putString(MyAppConfigConstant.TOKEN, newTokenResponse.token).apply()
+                sharedPreferences.edit().putString(AppConstant.TOKEN, newTokenResponse.token).apply()
                 return authResponse?.request()!!.newBuilder()
                     .header("Authorization", "Bearer " + newTokenResponse.token)
                     .build()
@@ -27,11 +27,11 @@ class TokenAuthenticator ( private val sharedPreferences: SharedPreferences) : A
         {
             // Refresh your access_token using a synchronous api request
             val retrofitInstance = Retrofit.Builder()
-                .baseUrl(MyAppConfigConstant.BASE_URL)
+                .baseUrl(AppConstant.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
             val testAPI = retrofitInstance.create(TestAPI::class.java)
-            val retrofitResponse = testAPI.loginWithCallBack(LoginRequest(MyAppConfigConstant.LOGIN_NAME, MyAppConfigConstant.PASSWORD)).execute()
+            val retrofitResponse = testAPI.loginWithCallBack(LoginRequest(AppConstant.LOGIN_NAME, AppConstant.PASSWORD)).execute()
             if (retrofitResponse.body() != null)
                 if (retrofitResponse.body()!!.token.isNotEmpty() && retrofitResponse.body()!!.token.isNotBlank()) {
                     return retrofitResponse.body()!!

@@ -1,7 +1,6 @@
-package com.ecommerce.testapp.activities.screens
+package com.ecommerce.testapp.activities
 
 
-import android.content.Intent
 import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
@@ -15,7 +14,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import com.ecommerce.testapp.LoginViewModel
@@ -55,8 +53,6 @@ class MainActivity : AppCompatActivity() {
 
         observeLogout()
     }
-
-    private val mainViewModel: MainViewModel by viewModels()
 
     private val loginViewModel: LoginViewModel by viewModels()
 

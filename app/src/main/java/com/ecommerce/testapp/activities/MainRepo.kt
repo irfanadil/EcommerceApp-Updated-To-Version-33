@@ -1,32 +1,28 @@
-package com.ecommerce.testapp.activities.screens
+package com.ecommerce.testapp.activities
 
-import android.app.Application
 import android.content.Context
 import androidx.lifecycle.LiveData
 import com.ecommerce.testapp.CartItem
-import com.ecommerce.testapp.CartItemRepository
-import com.ecommerce.testapp.ProductsDatabase
+import com.ecommerce.testapp.CartItemRepo
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 class MainRepo @Inject
-constructor(@ApplicationContext val appContext: Context,
+constructor(
+    @ApplicationContext private val appContext: Context,
+            private val cartItemRepo:CartItemRepo
             //val loginRepository: LoginRepository,
             //private val dataSource: LoginDataSource, private val spEditor: SharedPreferences.Editor,
 ) {
 
-    private val cartItemsDao = ProductsDatabase.getDatabase(appContext).cartItemsDao()
-    private val cartItemRepository = CartItemRepository(cartItemsDao)
+
     private var targetItem: CartItem? = null
 
-
-
-
-    fun getLiveCartItems():LiveData<List<CartItem>> = cartItemRepository.allCartItems
+    fun getLiveCartItems():LiveData<List<CartItem>> = cartItemRepo.allCartItems
 
     suspend fun insertUpdateCartItem(cartItem: CartItem)
     {
-        val cartItemList = cartItemRepository.getAllCartItems()
+        val cartItemList = cartItemRepo.getAllCartItems()
         targetItem = null
         for (listItem in cartItemList) {
             if (listItem.cartItemId == cartItem.cartItemId) {
@@ -35,11 +31,11 @@ constructor(@ApplicationContext val appContext: Context,
             }
         }
         if (targetItem == null)
-            cartItemRepository.insert(cartItem)
+            cartItemRepo.insert(cartItem)
         else {
             targetItem!!.cartItemQuantity++
             targetItem!!.cartItemPrice = targetItem!!.cartItemPrice + cartItem.cartItemPrice
-            cartItemRepository.updateCartItem(targetItem!!)
+            cartItemRepo.updateCartItem(targetItem!!)
         }
     }
 
@@ -48,17 +44,17 @@ constructor(@ApplicationContext val appContext: Context,
         cartItem.cartItemPrice = cartItem.cartItemPrice - (cartItem.cartItemPrice / cartItem.cartItemQuantity)
         cartItem.cartItemQuantity = cartItem.cartItemQuantity - 1
         if (cartItem.cartItemQuantity == 0) {
-            cartItemRepository.deleteCartItemById(cartItem.autoId)
+            cartItemRepo.deleteCartItemById(cartItem.autoId)
             return
         }
-        cartItemRepository.updateCartItem(cartItem)
+        cartItemRepo.updateCartItem(cartItem)
     }
 
     suspend fun addCartItem(cartItem: CartItem)
     {
         cartItem.cartItemPrice = cartItem.cartItemPrice + (cartItem.cartItemPrice / cartItem.cartItemQuantity)
         cartItem.cartItemQuantity = cartItem.cartItemQuantity + 1
-        cartItemRepository.updateCartItem(cartItem)
+        cartItemRepo.updateCartItem(cartItem)
     }
 
 

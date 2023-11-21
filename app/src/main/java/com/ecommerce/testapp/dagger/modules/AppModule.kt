@@ -1,6 +1,5 @@
 package com.ecommerce.testapp
 
-import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.security.keystore.KeyGenParameterSpec
@@ -10,8 +9,8 @@ import androidx.security.crypto.MasterKey
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
-import com.ecommerce.testapp.activities.screens.MainRepo
-import com.ecommerce.testapp.activities.screens.MainViewModel
+import com.ecommerce.testapp.activities.MainRepo
+import com.ecommerce.testapp.activities.MainViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -45,7 +44,7 @@ object AppModule {
 
              return EncryptedSharedPreferences.create(
                 context,
-                 MyAppConfigConstant.APP_PREFERENCES,
+                 AppConstant.APP_PREFERENCES,
                 masterKey, // masterKey created above
                 EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
                 EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM)
@@ -97,7 +96,7 @@ object AppModule {
         @Singleton
         fun retrofit(okHttpClient: OkHttpClient): Retrofit {
             return Retrofit.Builder()
-                .baseUrl(MyAppConfigConstant.BASE_URL)
+                .baseUrl(AppConstant.BASE_URL)
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
@@ -117,8 +116,10 @@ object AppModule {
         @Provides
         @Singleton
 
-        fun provideLoginRepo( dataSource: LoginDataSource,  spEditor: SharedPreferences.Editor , @ApplicationContext applicationContext: Context): LoginRepo {
-            return LoginRepo( dataSource,  spEditor, applicationContext )
+        fun provideLoginRepo( dataSource: LoginDataSource,  spEditor: SharedPreferences.Editor ,
+                                @ApplicationContext applicationContext: Context,
+                                ecommerceDatabase: EcommerceDatabase): LoginRepo {
+            return LoginRepo( dataSource,  spEditor, applicationContext , ecommerceDatabase )
         }
 
         @Provides
@@ -129,13 +130,15 @@ object AppModule {
 
         @Provides
         @Singleton
-        fun provideMainRepo(@ApplicationContext applicationContext: Context): MainRepo {
-            return MainRepo( applicationContext   )
+        fun provideMainRepo(@ApplicationContext applicationContext: Context, cartItemRepo : CartItemRepo): MainRepo {
+            return MainRepo( applicationContext , cartItemRepo  )
         }
 
-    @Provides
-    @Singleton
-    fun provideMainViewModel(@ApplicationContext applicationContext: Context, mainRepo: MainRepo): MainViewModel {
-        return MainViewModel( applicationContext , mainRepo )
-    }
+        @Provides
+        @Singleton
+        fun provideMainViewModel(@ApplicationContext applicationContext: Context, mainRepo: MainRepo): MainViewModel {
+            return MainViewModel( applicationContext , mainRepo )
+        }
+
+
 }

@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
-import com.ecommerce.testapp.activities.screens.MainViewModel
+import com.ecommerce.testapp.activities.MainViewModel
 
 
 class ItemDetailFragment : Fragment() {

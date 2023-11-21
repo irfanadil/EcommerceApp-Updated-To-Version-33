@@ -1,8 +1,6 @@
-package com.ecommerce.testapp.activities.screens
+package com.ecommerce.testapp.activities
 
-import android.app.Application
 import android.content.Context
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor( @ApplicationContext applicationContext: Context,
-                                        private val mainRepo:MainRepo)
+                                        private val mainRepo: MainRepo
+)
     : ViewModel() {
 
     private val _product: MutableLiveData<Product> =  MutableLiveData()
@@ -34,7 +33,7 @@ class MainViewModel @Inject constructor( @ApplicationContext applicationContext:
         viewModelScope.launch {
             try {
                 mainRepo.insertUpdateCartItem(cartItem)
-            } catch (e: Exception) { }
+            } catch (_: Exception) { }
         }
     }
 

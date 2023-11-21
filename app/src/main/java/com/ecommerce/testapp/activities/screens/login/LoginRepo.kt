@@ -9,7 +9,8 @@ import javax.inject.Inject
 class LoginRepo @Inject
 constructor(
     private val dataSource: LoginDataSource, private val spEditor: SharedPreferences.Editor,
-    @ApplicationContext val applicationContext: Context
+    @ApplicationContext val applicationContext: Context,
+    private val ecommerceDatabase: EcommerceDatabase
 )
 {
 
@@ -27,8 +28,8 @@ constructor(
 
     private fun setLoggedInUser(loginResponse: LoginResponse) {
 
-        spEditor.putBoolean(MyAppConfigConstant.IS_LOGGED_IN, true).apply()
-        spEditor.putString(MyAppConfigConstant.TOKEN, loginResponse.token).apply()
+        spEditor.putBoolean(AppConstant.IS_LOGGED_IN, true).apply()
+        spEditor.putString(AppConstant.TOKEN, loginResponse.token).apply()
         // If user credentials will be cached in local storage, it is recommended it be encrypted
         // @see https://developer.android.com/training/articles/keystore
     }
@@ -36,9 +37,10 @@ constructor(
 
     fun logout() {
         spEditor.clear()
-        spEditor.putBoolean(MyAppConfigConstant.IS_LOGGED_IN, false).apply()
-        spEditor.putString(MyAppConfigConstant.TOKEN, "").apply()
-        ProductsDatabase.getDatabase(applicationContext) .clearAllTables()
+        spEditor.putBoolean(AppConstant.IS_LOGGED_IN, false).apply()
+        spEditor.putString(AppConstant.TOKEN, "").apply()
+        ecommerceDatabase.clearAllTables()
+        //ProductsDatabase.getDatabase(applicationContext) .clearAllTables()
         //dataSource.logout()
     }
 

@@ -13,7 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.ecommerce.testapp.activities.screens.MainViewModel
+import com.ecommerce.testapp.activities.MainViewModel
 
 class CartFragment : Fragment() , CartItemListAdapter.OnCartItemClickListener {
 

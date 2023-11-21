@@ -14,7 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.ecommerce.testapp.activities.screens.MainViewModel
+import com.ecommerce.testapp.activities.MainViewModel
 import com.ecommerce.testapp.activities.screens.listing.adapter.SimpleItem
 import com.github.rubensousa.gravitysnaphelper.GravitySnapHelper
 import com.golfercard.playsafe.ItemListingFragmentViewModel

@@ -2,7 +2,7 @@ package com.ecommerce.testapp
 
 import androidx.lifecycle.LiveData
 
-class CartItemRepository(private val cartItemsDao: CartItemsDao) {
+class CartItemRepo(private val cartItemsDao: CartItemsDao) {
 
     val allCartItems: LiveData<List<CartItem>> = cartItemsDao.getLiveCartItems()
 
