@@ -1,6 +1,7 @@
 package com.ecommerce.testapp.activities
 
 
+import android.content.SharedPreferences
 import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
@@ -16,10 +17,12 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
+import com.ecommerce.testapp.AppConstant
 import com.ecommerce.testapp.LoginViewModel
 import com.ecommerce.testapp.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -27,6 +30,10 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration : AppBarConfiguration
     private lateinit var navController:NavController
+
+    @Inject
+    lateinit var sharedPreferences: SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.navigation_activity)
@@ -36,6 +43,15 @@ class MainActivity : AppCompatActivity() {
 
         // Set up Action Bar
         navController = host.navController
+
+        val inflater = host.navController.navInflater
+        val graph = inflater.inflate(R.navigation.mobile_navigation)
+
+
+        if(sharedPreferences.getBoolean(AppConstant.IS_LOGGED_IN, false))
+            graph.setStartDestination(R.id.item_listing_fragment)
+
+        navController.graph = graph
 
         appBarConfiguration = AppBarConfiguration(navController.graph)
 
